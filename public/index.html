@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Remote Chat Support/ Data Entry Role - USA Remote Jobs</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap");
+
+      body {
+        font-family: "Inter", sans-serif;
+        background: linear-gradient(135deg, #e0f7fa, #ffffff);
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        max-width: 700px;
+        margin: 60px auto;
+        padding: 30px;
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        text-align: center;
+        color: #007bff;
+        font-size: 2em;
+      }
+      p {
+        text-align: center;
+        color: #555;
+        margin-bottom: 30px;
+      }
+      .irsSection {
+        margin-top: 15px;
+        margin-left: 0px;
+        padding-left: 0px;
+        padding-top: 10px;
+        font-weight: bold;
+      }
+      form {
+        display: flex;
+        flex-direction: column;
+      }
+      label {
+        margin-top: 15px;
+        font-weight: 600;
+        color: #333;
+      }
+      input,
+      textarea,
+      select {
+        padding: 12px;
+        margin-top: 6px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 1rem;
+      }
+      input[type="file"] {
+        border: none;
+        background-color: #f9f9f9;
+      }
+      button {
+        margin-top: 25px;
+        padding: 14px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: background 0.3s ease;
+      }
+      button:hover {
+        background-color: #0056b3;
+      }
+      .success-message {
+        display: none;
+        padding: 15px;
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+        border-radius: 6px;
+        margin-top: 20px;
+        text-align: center;
+      }
+      .error-message {
+        display: none;
+        padding: 15px;
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+        border-radius: 6px;
+        margin-top: 20px;
+        text-align: center;
+      }
+      .checkbox-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .checkbox-group label {
+        font-weight: normal;
+      }
+      .datetimebox {
+        display: flex;
+        line-height: normal;
+        white-space: nowrap;
+        user-select: none;
+      }
+      .datetime-input-box-wrapper {
+        display: inline-flex;
+        flex: 1;
+        background-color: inherit;
+        min-width: 0;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .datetime-input-edit-wrapper {
+        overflow: hidden;
+        flex-grow: 1;
+      }
+      .consent-label {
+        display: none;
+        visibility: hidden;
+      }
+      .datetime-edit-field {
+        display: inline;
+        text-align: center;
+        padding: 1px 3px;
+        border: 0;
+        margin: 0;
+        ime-mode: disabled;
+        outline: none;
+      }
+      .datetime-edit-field:focus {
+        background-color: Highlight;
+        color: HighlightText;
+        outline: none;
+      }
+      .datetime-calendar-button {
+        -moz-context-properties: fill;
+        color: color-mix(in srgb, currentColor 65%, transparent);
+        font-size: inherit;
+        fill: currentColor;
+        background-color: transparent;
+        border: none;
+        border-radius: 0.2em;
+        flex: none;
+        margin-block: 0;
+        margin-inline: 0.075em 0.15em;
+        padding: 0 0.15em;
+        line-height: 1;
+      }
+      .datetime-calendar-button:focus-visible {
+        outline: 0.15em solid SelectedItem;
+      }
+      .datetime-calendar-button:focus-visible,
+      .datetime-calendar-button:hover {
+        color: inherit;
+      }
+      @media (prefers-contrast) {
+        .datetime-calendar-button {
+          background-color: ButtonFace;
+          color: ButtonText;
+        }
+        .datetime-calendar-button > .datetime-calendar-button-svg {
+          background-color: ButtonFace;
+          -moz-context-properties: fill;
+          fill: ButtonText;
+        }
+        .datetime-calendar-button:focus-visible,
+        .datetime-calendar-button:hover {
+          background-color: SelectedItem;
+        }
+        .datetime-calendar-button:focus-visible > .datetime-calendar-button-svg,
+        .datetime-calendar-button:hover > .datetime-calendar-button-svg {
+          background-color: SelectedItem;
+          -moz-context-properties: fill;
+          fill: SelectedItemText;
+        }
+      }
+      .datetime-calendar-button-svg {
+        pointer-events: none;
+        max-width: 1em;
+        max-height: 1em;
+      }
+      :host(:is(:disabled, :read-only, [type="time"]))
+        .datetime-calendar-button {
+        display: none;
+      }
+      :host(:is(:disabled, :read-only)) .datetime-edit-field {
+        user-select: none;
+        pointer-events: none;
+        -moz-user-focus: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Remote Chat Support/ Data Entry Role</h1>
+      <p>
+        Recruiter: <strong>USA Remote Jobs</strong> |
+        <strong>$30/hour</strong> | Entry-Level | Work From Anywhere
+      </p>
+
+      <form
+        onsubmit="this.querySelector('button').disabled = true;"
+        id="application-form"
+        action="/api/send"
+        method="POST"
+        enctype="multipart/form-data"
+      >
+        <label for="name">Full Name</label>
+        <input type="text" name="name" id="name" required />
+
+        <label for="email">Email Address</label>
+        <input type="email" name="email" id="email" required />
+
+        <label for="phone">Phone Number</label>
+        <input type="tel" name="phone" id="phone" />
+
+        <label for="dob">Date of Birth:</label>
+        <input type="date" id="dob" name="dob" required />
+        <br />
+
+        <label for="address">Home Address</label>
+        <input type="text" name="address" id="address" required />
+
+        <label for="state">What state do you currently live in?</label>
+        <input type="text" name="state" id="state" required />
+
+        <label for="us_auth"
+          >Are you currently living in the U.S / authorized to work in the
+          U.S?</label
+        >
+        <select name="us_auth" id="us_auth" required>
+          <option value="">Select</option>
+          <option value="Yes">Yes</option>
+          <option value="No">No</option>
+        </select>
+
+        <div class="irsSection">
+          <p>
+            <strong>Note:</strong> IRS details are required for further
+            verification.
+          </p>
+          <label for="irs_verified"
+            >Have you filed your IRS taxes as a U.S. citizen or resident?</label
+          >
+          <br />
+          <select name="irs_verified" id="irs_verified" required>
+            <option value="">Select</option>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+          </select>
+        </div>
+
+        <label for="internet"
+          >Do you have a reliable, secure and private internet
+          connection?</label
+        >
+        <select name="internet" id="internet" required>
+          <option value="">Select</option>
+          <option value="Yes">Yes</option>
+          <option value="No">No</option>
+        </select>
+
+        <label for="remote_exp">Have you previously worked remotely?</label>
+        <select name="remote_exp" id="remote_exp" required>
+          <option value="">Select</option>
+          <option value="Yes">Yes</option>
+          <option value="No">No</option>
+        </select>
+
+        <label for="salary">Desired Salary</label>
+        <input type="text" name="salary" id="salary" />
+
+        <label for="salary_type">Salary Type</label>
+        <select name="salary_type" id="salary_type">
+          <option value="Monthly">Monthly</option>
+          <option value="Yearly">Yearly</option>
+        </select>
+
+        <input type="hidden" name="__gra__" style="display: none !important" />
+
+        <label for="hours"
+          >How many hours would you like to work a week? (Max 30 hours)</label
+        >
+        <input type="number" name="hours" id="hours" max="30" required />
+
+        <label for="hourly_rate">What is your hourly rate requirement?</label>
+        <input type="text" name="hourly_rate" id="hourly_rate" />
+
+        <label
+          >What days are you available to work? (Check all that apply)</label
+        >
+        <div class="checkbox-group">
+          <label
+            ><input type="checkbox" name="availability" value="Monday" />
+            Monday</label
+          >
+          <label
+            ><input type="checkbox" name="availability" value="Tuesday" />
+            Tuesday</label
+          >
+          <label
+            ><input type="checkbox" name="availability" value="Wednesday" />
+            Wednesday</label
+          >
+          <label
+            ><input type="checkbox" name="availability" value="Thursday" />
+            Thursday</label
+          >
+          <label
+            ><input type="checkbox" name="availability" value="Friday" />
+            Friday</label
+          >
+          <label
+            ><input type="checkbox" name="availability" value="Saturday" />
+            Saturday</label
+          >
+          <label
+            ><input type="checkbox" name="availability" value="Sunday" />
+            Sunday</label
+          >
+        </div>
+
+        <label for="experience"
+          >Experience (include work history and education)</label
+        >
+        <textarea name="experience" id="experience" rows="4"></textarea>
+
+        <label for="cover_letter">Cover Letter</label>
+        <textarea name="cover_letter" id="cover_letter" rows="4"></textarea>
+
+        <label for="why_support"
+          >Why are you interested in a customer support agent position?</label
+        >
+        <textarea
+          name="why_support"
+          id="why_support"
+          rows="4"
+          required
+        ></textarea>
+
+        <label for="qualities"
+          >What unique qualities would you bring to the team?</label
+        >
+        <textarea name="qualities" id="qualities" rows="4" required></textarea>
+
+        <label for="referred">Referred by:</label>
+        <input type="text" name="referred" id="referred" />
+
+        <label for="resume">Upload Resume (PDF/DOC)</label>
+        <input
+          type="file"
+          name="resume"
+          id="resume"
+          accept=".pdf,.doc,.docx"
+          required
+        />
+
+        <label for="message">Why are you a good fit?</label>
+        <textarea
+          name="message"
+          id="message"
+          rows="5"
+          placeholder="Write a short message here..."
+          required
+        ></textarea>
+
+        <label>
+          <input type="checkbox" name="genuine" required />
+          I confirm that all the information provided in this application are
+          genuine. Any misinformation found will lead to the termination of the
+          application.
+        </label>
+
+        <label class="consent-label">
+          <input type="checkbox" name="consent" />
+          I agree to the <a href="index.html#">Privacy Policy</a>
+        </label>
+
+        <button type="submit">Submit Application</button>
+      </form>
+
+      <div id="success-message" class="success-message">
+        ✅ Your application has been submitted successfully!
+      </div>
+      <div id="error-message" class="error-message">
+        Error: Failed to submit form.
+      </div>
+    </div>
+  </body>
+</html>
