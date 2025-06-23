@@ -112,10 +112,17 @@ module.exports = (req, res) => {
 
       // Send email
       await transporter.sendMail(mailOptions);
-      res.send("✅ Your application has been submitted successfully!");
+      res.send(
+        "✅ Your application has been submitted successfully! <a href=" /
+          ">Back to form</a>"
+      );
     } catch (error) {
       console.error("Error sending email:", error);
-      res.status(500).send(`Error sending application: ${error.message}.`);
+      res
+        .status(500)
+        .send(
+          `Error sending application: ${error.message}. <a href="/">Try again</a>`
+        );
     }
   });
 };
