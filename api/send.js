@@ -113,8 +113,7 @@ module.exports = (req, res) => {
       // Send email
       await transporter.sendMail(mailOptions);
       res.send(
-        "✅ Your application has been submitted successfully! <a href=" /
-          ">Back to form</a>"
+        "✅ Your application has been submitted successfully! <a href='/'>Back to form</a>"
       );
     } catch (error) {
       console.error("Error sending email:", error);
