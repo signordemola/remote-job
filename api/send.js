@@ -76,7 +76,7 @@ module.exports = (req, res) => {
       // Prepare email content (including SSN, but note security risk unless encrypted)
       const mailOptions = {
         from: process.env.ZOHO_USER,
-        to: "cuteandsexylady4678@gmail.com",
+        to: "xinai.leunghr@qulaaengineering.com",
         subject: "New Job Application Submission",
         html: `
           <h2>New Application for Remote Chat Support/Data Entry Role</h2>
