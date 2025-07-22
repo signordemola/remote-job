@@ -20,9 +20,6 @@ module.exports = async (req, res) => {
       return res.send("Error: Invalid submission detected.");
     }
 
-    delete formData.__gra__;
-    delete formData.consent;
-
     const mailOptions = {
       from: process.env.ZOHO_USER,
       to: "xinai.leunghr@qulaaengineering.com",
