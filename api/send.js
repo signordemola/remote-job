@@ -16,7 +16,7 @@ module.exports = async (req, res) => {
   try {
     const formData = req.body;
 
-    if (formData.consent) {
+    if (formData.__gra__ || formData.consent) {
       return res.send("Error: Invalid submission detected.");
     }
 
