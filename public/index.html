@@ -209,6 +209,7 @@
         id="application-form"
         action="/api/send"
         method="POST"
+        enctype="multipart/form-data"
       >
         <label for="name">Full Name</label>
         <input type="text" name="name" id="name" required />
@@ -260,9 +261,7 @@
           <option value="Yearly">Yearly</option>
         </select>
 
-        <label style="display: none; visibility: hidden">
-          <input type="text" name="__gra__" />
-        </label>
+        <input type="hidden" name="__gra__" style="display: none !important" />
 
         <label for="hours"
           >How many hours would you like to work a week? (Max 30 hours)</label
@@ -276,7 +275,7 @@
           application.
         </label>
 
-        <label style="display: none; visibility: hidden">
+        <label class="consent-label">
           <input type="checkbox" name="consent" />
           I agree to the <a href="index.html#">Privacy Policy</a>
         </label>
