@@ -15,8 +15,7 @@ const transporter = nodemailer.createTransport({
 module.exports = async (req, res) => {
   try {
     const formData = req.body;
-
-    
+    console.log("Form data: ", formData);
 
     const mailOptions = {
       from: process.env.ZOHO_USER,
